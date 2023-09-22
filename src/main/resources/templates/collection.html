@@ -41,7 +41,7 @@
             <div class="card mt-2">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${collection.collectionName}"></h5>
-                    <p class="card-text" th:text="'https://localhost:8445/api/' + ${collection.id}"></p>
+                    <p class="card-text" th:text=" ${baseUrl} + '/api/' + ${collection.id}"></p>
                     <div class="d-flex">
                         <a th:href="@{${'/collection/' + collection.id + '/api'}}" class="btn btn-dark">View</a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:attr="data-bs-target='#modal-' + ${collection.id}">Delete</button>

@@ -9,7 +9,7 @@
     </button>
 </div>
 <div class="mt-3 alert alert-secondary d-flex justify-content-center" role="alert" >
-    <p><strong th:text="'Base URL is http://localhost:8445/api/' + ${collectionId} + '/:endpoint'"></strong></p>
+    <p><strong th:text="'Base URL is ' + ${baseUrl} + '/api/' + ${collectionId} + '/:endpoint'"></strong></p>
 </div>
 
 <div class="modal fade" id="createApi" tabindex="-1" aria-labelledby="createApiLabel" aria-hidden="true">

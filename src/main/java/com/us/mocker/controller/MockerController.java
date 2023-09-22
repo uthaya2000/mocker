@@ -1,11 +1,14 @@
 package com.us.mocker.controller;
 
+import com.us.mocker.misc.Constants;
 import com.us.mocker.requestresponse.ApiRequest;
 import com.us.mocker.security.GoogleOauthUser;
 import com.us.mocker.service.MockerService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +21,9 @@ public class MockerController {
 
     @GetMapping("/")
     public String indexPage(Model model) {
-        return "index";
+        if ("anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return "index";
+        return Constants.REDIRECT_TO_GET_COLLECTION;
     }
 
     /*Collection Endpoints*/
@@ -26,8 +31,8 @@ public class MockerController {
     public String getCollectionByEmail(@ModelAttribute("error") String error,
                                        @AuthenticationPrincipal GoogleOauthUser oauthUser,
                                        @RequestParam(name = "c", defaultValue = "") String name,
-                                       Model model, HttpSession session) {
-        return mockerService.getCollectionByEmail(session, oauthUser.getEmail(), model, name);
+                                       Model model, HttpSession session, HttpServletRequest request) {
+        return mockerService.getCollectionByEmail(request, session, oauthUser.getEmail(), model, name);
     }
 
     @PostMapping("/collection")
@@ -44,8 +49,8 @@ public class MockerController {
 
     /*API Endpoints*/
     @GetMapping("/collection/{id}/api")
-    public String getApi(@PathVariable("id") String id, Model model, HttpSession session) {
-        return mockerService.getAPI(id, model, session);
+    public String getApi(@PathVariable("id") String id, Model model, HttpSession session, HttpServletRequest request) {
+        return mockerService.getAPI(id, model, session, request);
     }
 
     @PostMapping("/collection/{id}/api")

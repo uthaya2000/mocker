@@ -6,12 +6,14 @@ import com.us.mocker.model.Collections;
 import com.us.mocker.repo.ApiRepo;
 import com.us.mocker.repo.CollectionRepo;
 import com.us.mocker.requestresponse.ApiRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
@@ -26,7 +28,7 @@ public class MockerService {
     ApiRepo apiRepo;
 
     private static final String ERROR_KEY = "error";
-    public String getCollectionByEmail(HttpSession session, String email, Model model, String name) {
+    public String getCollectionByEmail(HttpServletRequest request, HttpSession session, String email, Model model, String name) {
         List<Collections> collections;
 
         if (StringUtils.isEmpty(name))
@@ -34,9 +36,15 @@ public class MockerService {
         else
             collections = collectionRepo.searchCollectionByName(name.toLowerCase(), email);
 
-        String error = (String) session.getAttribute(ERROR_KEY);
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        model.addAttribute("baseUrl", baseUrl);
         model.addAttribute(Constants.COLLECTIONS, collections);
         model.addAttribute(Constants.EMAIL, email);
+
+        String error = (String) session.getAttribute(ERROR_KEY);
         if (!StringUtils.isEmpty(error)) {
             model.addAttribute(ERROR_KEY, error);
             session.removeAttribute(ERROR_KEY);
@@ -61,7 +69,7 @@ public class MockerService {
         return String.format(Constants.REDIRECT_TO_GET_COLLECTION_API, collections.getId());
     }
 
-    public String getAPI(String id, Model model, HttpSession session) {
+    public String getAPI(String id, Model model, HttpSession session, HttpServletRequest request) {
         Collections collections = collectionRepo.findById(id).orElse(null);
         if (collections == null) {
             session.setAttribute(ERROR_KEY, "Collection Not Present");
@@ -72,6 +80,13 @@ public class MockerService {
             model.addAttribute(ERROR_KEY, error);
             session.removeAttribute(ERROR_KEY);
         }
+
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        model.addAttribute("baseUrl", baseUrl);
+
         model.addAttribute(Constants.COLLECTION_ID, collections.getId());
         model.addAttribute(Constants.MOCK_APIS, formEditApiRequest(collections.getApis()));
         model.addAttribute("createApiRequest", new ApiRequest());
