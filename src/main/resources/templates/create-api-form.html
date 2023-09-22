@@ -1,0 +1,45 @@
+<form th:action="@{${'/collection/' + collectionId + '/api'}}" method="post" th:object="${createApiRequest}">
+    <div class="row gx-3 gy-2 align-items-center">
+        <div class="col-8">
+            <label for="endPoint" class="form-label">Endpoint</label>
+            <input name="endPoint" type="text" class="form-control" id="endPoint" th:field="*{endPoint}">
+        </div>
+        <div class="col-4">
+            <label for="method" class="form-label">Method</label>
+            <select class="form-select" id="method" name="method" th:field="*{method}">
+                <option value="GET" selected>GET</option>
+                <option value="POST" >POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mt-3 align-items-center">
+        <div class="col-4">
+            <label for="httpStatus" class="form-label">Http Status</label>
+            <input type="text" name="httpStatus" class="form-control" id="httpStatus" value="200" th:field="*{httpStatus}">
+        </div>
+        <div class="col-8">
+            <div class="form-floating">
+                <textarea class="form-control" name="responseHeaders" id="responseHeaders" th:field="*{responseHeaders}"></textarea>
+                <label for="responseHeaders">Response Headers</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-floating mt-3">
+        <textarea class="form-control" name="responseBody" id="responseBody" style="height: 100px" th:field="*{responseBody}"></textarea>
+        <label for="responseBody">Response Body</label>
+    </div>
+    <button type="submit" class="btn btn-dark mt-3">Create</button>
+</form>
+
+<script type="text/javascript">
+
+    document.getElementById("responseHeaders").value = JSON.stringify({
+        "Content-Type": "application/json"
+    });
+
+    document.getElementById("responseBody").value = JSON.stringify({ "status": "Have a Good day!!"});
+</script>

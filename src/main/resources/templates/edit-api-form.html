@@ -1,0 +1,50 @@
+<div th:replace = "~{header.html}"></div>
+
+<div th:if="${not #strings.isEmpty(error)}">
+    <div th:replace="~{error.html}"></div>
+</div>
+
+<a th:href="@{${'/collection/' + collectionId + '/api'}}" class="btn mt-5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+    </svg>
+</a>
+<h1 class="display-4 mt-5 text-center">Update Mock API</h1>
+<form th:action="@{${'/collection/' + collectionId + '/api/' + updateApiRequest.id}}" method="POST" th:object="${updateApiRequest}">
+    <div class="row gx-3 gy-2 align-items-center">
+        <div class="col-8">
+            <label for="endpoint" class="form-label">Endpoint</label>
+            <input name="endPoint" th:field="*{endPoint}" type="text" class="form-control" id="endpoint">
+        </div>
+        <div class="col-4">
+            <label for="method" class="form-label">Method</label>
+            <select class="form-select" th:field="*{method}" id="method" name="method">
+                <option value="GET" th:selected="${updateApiRequest.method == 'GET'}">GET</option>
+                <option value="POST" th:selected="${updateApiRequest.method == 'POST'}">POST</option>
+                <option value="PUT" th:selected="${updateApiRequest.method == 'PUT'}">PUT</option>
+                <option value="DELETE" th:selected="${updateApiRequest.method == 'DELETE'}">DELETE</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mt-3 align-items-center">
+        <div class="col-4">
+            <label for="status" class="form-label">Http Status</label>
+            <input type="text" id="status" th:field="*{httpStatus}" name="httpStatus" class="form-control"  value="200">
+        </div>
+        <div class="col-8">
+            <div class="form-floating">
+                <label for="headers">Response Headers</label>
+                <textarea class="form-control" th:field="*{responseHeaders}" name="responseHeaders" id="headers"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-floating mt-3">
+        <label for="body">Response Body</label>
+        <textarea class="form-control" th:field="*{responseBody}" name="responseBody" id="body" style="height: 100px"></textarea>
+    </div>
+    <button type="submit" class="btn btn-dark mt-3">Update</button>
+</form>
+
+<div th:replace = "~{footer.html}"></div>

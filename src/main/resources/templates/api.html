@@ -1,0 +1,55 @@
+<div th:replace = "~{header.html}"></div>
+<div th:if="${not #strings.isEmpty(error)}">
+    <div th:replace="~{error.html}"></div>
+</div>
+
+<div class="mt-5 d-flex justify-content-center">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createApi">
+        Create Mock API
+    </button>
+</div>
+<div class="mt-3 alert alert-secondary d-flex justify-content-center" role="alert" >
+    <p><strong th:text="'Base URL is http://localhost:8445/api/' + ${collectionId} + '/:endpoint'"></strong></p>
+</div>
+
+<div class="modal fade" id="createApi" tabindex="-1" aria-labelledby="createApiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createApiLabel">Create Mock API</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span th:replace="~{create-api-form.html}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:if="${not #lists.isEmpty(mockApis)}" class="mt-3">
+    <div class="list-group" th:each="api: ${mockApis}">
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="methodDisplay" th:value="${api.method}" readonly>
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="endPointDisplay" th:value="${api.endPoint}" readonly>
+            </div>
+
+            <div class="col-md-3">
+                <a th:href="@{${'/collection/' + collectionId + '/api/' + api.id}}" class="btn btn-secondary">Edit</a>
+            </div>
+
+            <form class="col-md-3" th:method="delete" th:action="@{${'/collection/' + collectionId + '/api/' + api.id}}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:unless="${not #lists.isEmpty(mockApis)}" class="mt-5 d-flex justify-content-center">
+    <p class="fw-lighter">No APIs Present</p>
+</div>
+
+
+<div th:replace = "~{footer.html}"></div>
